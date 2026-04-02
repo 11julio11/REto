@@ -1,0 +1,40 @@
+# ────────────────────────────────────────────────────
+# Docker Compose — Día 3: Compose + Secret Management
+# Los secretos se inyectan desde archivos, NO en .env
+# ────────────────────────────────────────────────────
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://myuser:superseguro123@db:5432/mydb
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_DB=mydb
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+secrets:
+  db_password:
+    file: ./db_password.txt
+
+volumes:
+  db_data:
