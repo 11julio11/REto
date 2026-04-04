@@ -92,3 +92,4 @@ reto/
 - [Día 5: K8s & Networking](docs/dia5-k8s-networking.md)
 - [Día 6: Second Brain](docs/dia6-second-brain.md)
 - [Día 7: Checkpoint](docs/dia7-checkpoint.md)
+- [Día 8: Clean Architecture & DI](docs/dia8-clean-architecture.md)

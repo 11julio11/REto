@@ -1,15 +1,12 @@
 """
-Tests unitarios para la API del Reto.
+Tests unitarios para la API del Reto refactorizada a Clean Architecture.
 
-Día 4: CI/CD con Testing Automático.
-Estos tests corren en el pipeline ANTES del build de imagen.
-Si fallan, el merge se bloquea.
+Día 8: Usamos Inyección de Dependencias.
 """
 
 from fastapi.testclient import TestClient
-
-from main import app, items_db
-
+from main import app
+from repository.memory_repository import db_instance
 
 client = TestClient(app)
 
@@ -19,8 +16,8 @@ client = TestClient(app)
 # ──────────────────────────────────────────────
 
 def setup_function():
-    """Limpia la 'base de datos' antes de cada test."""
-    items_db.clear()
+    """Limpia la 'base de datos' antes de cada test para no tener contaminación."""
+    db_instance._db.clear()
 
 
 # ──────────────────────────────────────────────
@@ -32,18 +29,12 @@ def test_health_check_returns_200():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "healthy"
-    assert data["service"] == "reto-api"
-
-
-def test_health_check_has_version():
-    response = client.get("/")
-    data = response.json()
-    assert "version" in data
-
+    assert data["arch"] == "clean-architecture"
 
 # ──────────────────────────────────────────────
 # Tests: Crear items
 # ──────────────────────────────────────────────
+
 
 def test_create_item_returns_201():
     response = client.post("/items", json={
@@ -88,7 +79,6 @@ def test_list_items_empty():
 
 
 def test_list_items_after_creation():
-    # Crear 2 items
     client.post("/items", json={"name": "Item 1", "price": 10.0})
     client.post("/items", json={"name": "Item 2", "price": 20.0})
 
@@ -103,14 +93,12 @@ def test_list_items_after_creation():
 # ──────────────────────────────────────────────
 
 def test_get_item_by_id():
-    # Crear un item
     create_resp = client.post("/items", json={
         "name": "Monitor",
         "price": 599.99,
     })
     item_id = create_resp.json()["id"]
 
-    # Obtenerlo
     response = client.get(f"/items/{item_id}")
     assert response.status_code == 200
     assert response.json()["name"] == "Monitor"
@@ -127,7 +115,6 @@ def test_get_item_not_found_returns_404():
 # ──────────────────────────────────────────────
 
 def test_delete_item():
-    # Crear y luego eliminar
     create_resp = client.post("/items", json={
         "name": "Borrable",
         "price": 1.0,
@@ -137,11 +124,31 @@ def test_delete_item():
     delete_resp = client.delete(f"/items/{item_id}")
     assert delete_resp.status_code == 204
 
-    # Verificar que ya no existe
     get_resp = client.get(f"/items/{item_id}")
     assert get_resp.status_code == 404
 
 
 def test_delete_item_not_found_returns_404():
     response = client.delete("/items/id-inexistente")
+    assert response.status_code == 404
+
+# ──────────────────────────────────────────────
+# Tests: Async Workers Dispatch (Día 9)
+# ──────────────────────────────────────────────
+
+def test_process_item_async_accepted():
+    # 1. Crear item para procesar
+    create_resp = client.post("/items", json={
+        "name": "Servidor",
+        "price": 1000.0,
+    })
+    item_id = create_resp.json()["id"]
+
+    # 2. Despachar
+    response = client.post(f"/items/{item_id}/process")
+    assert response.status_code == 202
+    assert "aceptado" in response.json()["message"]
+
+def test_process_item_async_not_found():
+    response = client.post("/items/no-existe/process")
     assert response.status_code == 404
