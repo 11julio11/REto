@@ -8,6 +8,7 @@ El main solo arranca el servidor y conecta los routers.
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from api.routers import router as items_router
+from api.auth_router import router as auth_router
 from workers.pool import WorkerPool
 import logging
 
@@ -36,6 +37,7 @@ app = FastAPI(
 )
 
 # Incluir Rutas
+app.include_router(auth_router)
 app.include_router(items_router)
 
 

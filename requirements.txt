@@ -1,18 +1,23 @@
 # API Framework
-fastapi==0.110.0
-uvicorn[standard]==0.27.1
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.1
 
 # HTTP client
-httpx==0.27.0
+httpx>=0.27.0
 
 # Testing
-pytest==8.0.2
+pytest>=8.0.2
 
 # Linting
-flake8==7.0.0
+flake8>=7.0.0
 
 # Database driver (para Semana 2)
-psycopg2-binary==2.9.9
+psycopg2-binary>=2.9.9
 
 # Pydantic (ya viene con FastAPI, pero explícito)
-pydantic==2.6.1
+pydantic>=2.6.0
+
+# Seguridad (Día 10)
+passlib[bcrypt]>=1.7.4
+python-jose[cryptography]>=3.3.0
+python-multipart>=0.0.9

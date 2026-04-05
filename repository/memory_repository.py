@@ -1,5 +1,5 @@
 from typing import List, Optional
-from domain.interfaces import ItemRepository
+from domain.interfaces import ItemRepository, UserRepository
 from domain.schemas import ItemResponse
 
 
@@ -36,3 +36,22 @@ class MemoryItemRepository(ItemRepository):
 
 # Instancia global como simulador de DB, solo por ser en memoria
 db_instance = MemoryItemRepository()
+
+
+class MemoryUserRepository(UserRepository):
+    def __init__(self):
+        # Base de datos en memoria local para usuarios
+        # struct: {"user_id": {"id": "...", "username": "...", "hashed_password": "..."}}
+        self._db: dict[str, dict] = {}
+
+    def get_by_username(self, username: str) -> Optional[dict]:
+        for user_data in self._db.values():
+            if user_data.get("username") == username:
+                return user_data
+        return None
+
+    def save(self, user_id: str, user_data: dict) -> dict:
+        self._db[user_id] = user_data
+        return user_data
+
+user_db_instance = MemoryUserRepository()

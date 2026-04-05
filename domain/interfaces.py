@@ -24,3 +24,12 @@ class ItemRepository(ABC):
     @abstractmethod
     def delete(self, item_id: str) -> bool:
         pass
+
+class UserRepository(ABC):
+    @abstractmethod
+    def get_by_username(self, username: str) -> Optional[dict]:
+        pass
+
+    @abstractmethod
+    def save(self, user_id: str, user_data: dict) -> dict:
+        pass

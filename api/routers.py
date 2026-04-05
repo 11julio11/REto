@@ -3,25 +3,36 @@ from typing import List
 
 from domain.schemas import ItemCreate, ItemResponse
 from service.item_service import ItemService, ItemNotFoundError
-from api.dependencies import get_item_service
+from api.dependencies import get_item_service, get_current_user
 from workers.queue import enqueue_job
 
 router = APIRouter(prefix="/items", tags=["items"])
 
 
 @router.get("", response_model=List[ItemResponse])
-def list_items(service: ItemService = Depends(get_item_service)):
+def list_items(
+    service: ItemService = Depends(get_item_service),
+    current_user: dict = Depends(get_current_user)
+):
     # La ruta no sabe de DBs, solo llama a list_items()
     return service.list_items()
 
 
 @router.post("", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
-def create_item(item: ItemCreate, service: ItemService = Depends(get_item_service)):
+def create_item(
+    item: ItemCreate,
+    service: ItemService = Depends(get_item_service),
+    current_user: dict = Depends(get_current_user)
+):
     return service.create_item(item)
 
 
 @router.get("/{item_id}", response_model=ItemResponse)
-def get_item(item_id: str, service: ItemService = Depends(get_item_service)):
+def get_item(
+    item_id: str,
+    service: ItemService = Depends(get_item_service),
+    current_user: dict = Depends(get_current_user)
+):
     try:
         return service.get_item(item_id)
     except ItemNotFoundError as e:
@@ -30,7 +41,11 @@ def get_item(item_id: str, service: ItemService = Depends(get_item_service)):
 
 
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_item(item_id: str, service: ItemService = Depends(get_item_service)):
+def delete_item(
+    item_id: str,
+    service: ItemService = Depends(get_item_service),
+    current_user: dict = Depends(get_current_user)
+):
     try:
         service.delete_item(item_id)
     except ItemNotFoundError as e:
@@ -38,7 +53,11 @@ def delete_item(item_id: str, service: ItemService = Depends(get_item_service)):
 
 
 @router.post("/{item_id}/process", status_code=status.HTTP_202_ACCEPTED)
-async def process_item_async(item_id: str, service: ItemService = Depends(get_item_service)):
+async def process_item_async(
+    item_id: str,
+    service: ItemService = Depends(get_item_service),
+    current_user: dict = Depends(get_current_user)
+):
     """
     Ruta delegada (Día 9)
     Simula ordenar que se procese un Item en segundo plano por el Worker Pool.
