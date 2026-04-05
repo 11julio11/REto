@@ -21,6 +21,8 @@ services:
       - POSTGRES_USER=myuser
       - POSTGRES_DB=mydb
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    ports:
+      - "5432:5432"
     secrets:
       - db_password
     volumes:
