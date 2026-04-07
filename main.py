@@ -7,6 +7,7 @@ El main solo arranca el servidor y conecta los routers.
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from api.routers import router as items_router
 from api.auth_router import router as auth_router
 from workers.pool import WorkerPool
@@ -34,6 +35,15 @@ app = FastAPI(
     description="API del Reto T-Shaped Engineer — Checkpoint Día 9 (Worker Pools)",
     version="3.0.0",
     lifespan=lifespan,
+)
+
+# CORS — permite que el frontend de Vite (puerto 5173) acceda al API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Incluir Rutas

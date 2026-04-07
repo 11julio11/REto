@@ -1,0 +1,4 @@
+/* Limpiamos los estilos por defecto de Vite */
+#root {
+  min-height: 100vh;
+}
