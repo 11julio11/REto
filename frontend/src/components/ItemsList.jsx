@@ -1,9 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { fetchItems, createItem, deleteItem } from '../services/api'
+import { useToast } from '../context/ToastContext'
 
 export default function ItemsList() {
   const queryClient = useQueryClient()
+  const { addToast } = useToast()
   const [form, setForm] = useState({ name: '', description: '', price: '' })
 
   // ── useQuery: el corazón de TanStack Query ──────────────────────────────
@@ -19,16 +21,21 @@ export default function ItemsList() {
   // ── useMutation: para operaciones que cambian datos (POST, DELETE) ────────
   const createMutation = useMutation({
     mutationFn: createItem,
-    // onSuccess: invalida el caché de ['items'] → refetch automático
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['items'] })
       setForm({ name: '', description: '', price: '' })
+      addToast(`Item "${data.name}" creado correctamente.`, 'success')
     },
+    onError: () => {}, // El interceptor global ya lo muestra
   })
 
   const deleteMutation = useMutation({
     mutationFn: deleteItem,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['items'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['items'] })
+      addToast('Item eliminado.', 'info')
+    },
+    onError: () => {},
   })
 
   const handleCreate = (e) => {
