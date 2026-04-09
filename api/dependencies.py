@@ -1,31 +1,46 @@
+import os
+import logging
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
-from repository.memory_repository import db_instance, user_db_instance
 from domain.interfaces import ItemRepository, UserRepository
 from service.item_service import ItemService
 from service.auth_service import AuthService
 from core.security import verify_token
 
+logger = logging.getLogger(__name__)
+
+# ── Detectar si PostgreSQL está disponible ────────────────────────────────
+# Si DATABASE_URL está configurada, usamos Postgres. Si no, fallback a Memoria.
+_use_postgres = bool(os.environ.get("DATABASE_URL"))
+
+def _get_repos():
+    """Retorna los repositorios correctos según el entorno."""
+    if _use_postgres:
+        try:
+            from repository.postgres_item_repository import PostgresItemRepository
+            from repository.postgres_user_repository import PostgresUserRepository
+            return PostgresItemRepository(), PostgresUserRepository()
+        except Exception as e:
+            logger.warning(f"PostgreSQL no disponible, usando memoria: {e}")
+
+    from repository.memory_repository import db_instance, user_db_instance
+    return db_instance, user_db_instance
+
+_item_repo, _user_repo = _get_repos()
+
 
 def get_item_repository() -> ItemRepository:
-    """
-    Retorna la implementación específica de DB que usemos.
-    Aquí es donde cambiaríamos a PostgresItemRepository(db_client) en la Semana 2.
-    """
-    return db_instance
+    """Retorna la implementación de repositorio activa (Postgres o Memoria)."""
+    return _item_repo
 
 
 def get_item_service(repo: ItemRepository = Depends(get_item_repository)) -> ItemService:
-    """
-    Inyector de dependencias para el framework de FastAPI.
-    Construye nuestro servicio de negocio inyectándole el repositorio.
-    """
     return ItemService(repo=repo)
 
 
 def get_user_repository() -> UserRepository:
-    return user_db_instance
+    return _user_repo
 
 
 def get_auth_service(repo: UserRepository = Depends(get_user_repository)) -> AuthService:

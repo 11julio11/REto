@@ -1,11 +1,11 @@
 """
 API principal del Reto T-Shaped Engineer.
 
-Día 8: Refactor a Clean Architecture + Dependency Injection.
-El main solo arranca el servidor y conecta los routers.
+Día 14: App Fullstack — Auth real + Migraciones de DB funcionando.
 """
 
 from contextlib import asynccontextmanager
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routers import router as items_router
@@ -15,16 +15,30 @@ import logging
 
 # Configurar logs básicos para ver el WorkerPool
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 pool = WorkerPool(num_workers=3)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Arrancamos los trabajadores
+    # 1. Ejecutar migraciones de DB si PostgreSQL está disponible
+    if os.environ.get("DATABASE_URL"):
+        try:
+            from scripts.migrate import run_migrations
+            run_migrations()
+        except Exception as e:
+            logger.warning(f"Migraciones no pudieron correr: {e}")
+
+    # 2. Arrancar los trabajadores
     await pool.start()
     yield
-    # Apagamos ordenadamente los trabajadores al morir el app
+    # 3. Apagar trabajadores y cerrar conexiones DB
     await pool.stop()
+    try:
+        from db.connection import close_pool
+        close_pool()
+    except Exception:
+        pass
 
 # ──────────────────────────────────────────────
 # App FastAPI

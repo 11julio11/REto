@@ -1,4 +1,6 @@
--- -- step(1) -- --
+-- Migración 0001: Esquema inicial
+-- Crea las tablas `users` e `items` necesarias para el proyecto.
+
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(50) PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
@@ -12,6 +14,3 @@ CREATE TABLE IF NOT EXISTS items (
     price NUMERIC(10, 2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
--- -- step(2) -- --
--- You can add further steps in a single file or leave rollback commands out. Yoyo uses separate .rollback.sql files optionally, but for simplicity we will just stick with standard up steps.
