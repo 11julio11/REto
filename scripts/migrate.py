@@ -7,14 +7,17 @@ import socket
 import logging
 import psycopg                      # psycopg3 — reemplaza a psycopg2
 from pathlib import Path
+from urllib.parse import urlparse
 from core.config import DATABASE_URL
 
 logger = logging.getLogger(__name__)
 
 MAX_RETRIES = 30
 RETRY_DELAY = 3
-DB_HOST = "127.0.0.1"
-DB_PORT = 5432
+
+parsed_url = urlparse(DATABASE_URL)
+DB_HOST = parsed_url.hostname or "127.0.0.1"
+DB_PORT = parsed_url.port or 5432
 
 
 def _port_open(host: str, port: int, timeout: float = 2.0) -> bool:
