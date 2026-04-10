@@ -15,8 +15,8 @@ RUN python -m venv /venv && /venv/bin/pip install --no-cache-dir -r requirements
 # Copiamos el resto del código
 COPY . .
 
-# Stage 2: runtime (imagen final ligera)
-FROM python:3.11-alpine
+# Stage 2: runtime (imagen final ligera pero compatible con binarios de Debian)
+FROM python:3.11-slim
 WORKDIR /app
 
 # Copiamos el entorno virtual y el código desde el builder
