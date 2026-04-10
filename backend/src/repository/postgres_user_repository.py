@@ -1,6 +1,6 @@
 from typing import Optional
-from domain.interfaces import UserRepository
-from db.connection import get_connection, release_connection
+from src.domain.interfaces import UserRepository
+from src.db.connection import get_connection, release_connection
 
 
 class PostgresUserRepository(UserRepository):

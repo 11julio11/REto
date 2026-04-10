@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from domain.schemas import ItemResponse
+from src.domain.schemas import ItemResponse
 
 
 class ItemRepository(ABC):

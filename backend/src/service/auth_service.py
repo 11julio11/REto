@@ -1,8 +1,8 @@
 from typing import Optional
 from jose import JWTError
-from domain.interfaces import UserRepository
-from domain.schemas import UserCreate, UserInDB
-from core.security import get_password_hash, verify_password, create_access_token, create_refresh_token, verify_token
+from src.domain.interfaces import UserRepository
+from src.domain.schemas import UserCreate, UserInDB
+from src.config.security import get_password_hash, verify_password, create_access_token, create_refresh_token, verify_token
 import uuid
 
 class AuthError(Exception):

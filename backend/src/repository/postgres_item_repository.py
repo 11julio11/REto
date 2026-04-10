@@ -1,7 +1,7 @@
 from typing import List, Optional
-from domain.interfaces import ItemRepository
-from domain.schemas import ItemResponse
-from db.connection import get_connection, release_connection
+from src.domain.interfaces import ItemRepository
+from src.domain.schemas import ItemResponse
+from src.db.connection import get_connection, release_connection
 
 
 class PostgresItemRepository(ItemRepository):

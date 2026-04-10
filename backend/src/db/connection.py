@@ -5,7 +5,7 @@ a diferencia de psycopg2 que falla con locales en español.
 """
 import psycopg                      # psycopg3
 from psycopg.rows import dict_row
-from core.config import DATABASE_URL
+from src.config.config import DATABASE_URL
 import logging
 
 logger = logging.getLogger(__name__)

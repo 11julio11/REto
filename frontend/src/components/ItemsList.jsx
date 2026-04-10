@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { fetchItems, createItem, deleteItem } from '../services/api'
+import { fetchItems, createItem, deleteItem } from '../api/api'
 import { useToast } from '../context/ToastContext'
 
 export default function ItemsList() {

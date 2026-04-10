@@ -1,6 +1,6 @@
 from typing import List, Optional
-from domain.interfaces import ItemRepository, UserRepository
-from domain.schemas import ItemResponse
+from src.domain.interfaces import ItemRepository, UserRepository
+from src.domain.schemas import ItemResponse
 
 
 class MemoryItemRepository(ItemRepository):

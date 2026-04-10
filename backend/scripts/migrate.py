@@ -8,7 +8,7 @@ import logging
 import psycopg                      # psycopg3 — reemplaza a psycopg2
 from pathlib import Path
 from urllib.parse import urlparse
-from core.config import DATABASE_URL
+from src.config.config import DATABASE_URL
 
 logger = logging.getLogger(__name__)
 

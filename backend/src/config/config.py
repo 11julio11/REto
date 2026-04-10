@@ -14,8 +14,8 @@ def get_database_url() -> str:
     url = os.environ.get("DATABASE_URL")
     if url:
         return url
-    # Fallback para desarrollo local sin Docker
-    return "postgresql://myuser:superseguro123@localhost:5432/mydb"
+    # URL por defecto con el puerto 5433 para conectarse a Docker y evitar conflictos con un PostgreSQL local de Windows.
+    return "postgresql://myuser:superseguro123@localhost:5433/mydb"
 
 
 DATABASE_URL = get_database_url()

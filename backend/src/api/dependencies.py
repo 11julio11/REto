@@ -3,10 +3,10 @@ import logging
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
-from domain.interfaces import ItemRepository, UserRepository
-from service.item_service import ItemService
-from service.auth_service import AuthService
-from core.security import verify_token
+from src.domain.interfaces import ItemRepository, UserRepository
+from src.service.item_service import ItemService
+from src.service.auth_service import AuthService
+from src.config.security import verify_token
 
 logger = logging.getLogger(__name__)
 
@@ -18,13 +18,13 @@ def _get_repos():
     """Retorna los repositorios correctos según el entorno."""
     if _use_postgres:
         try:
-            from repository.postgres_item_repository import PostgresItemRepository
-            from repository.postgres_user_repository import PostgresUserRepository
+            from src.repository.postgres_item_repository import PostgresItemRepository
+            from src.repository.postgres_user_repository import PostgresUserRepository
             return PostgresItemRepository(), PostgresUserRepository()
         except Exception as e:
             logger.warning(f"PostgreSQL no disponible, usando memoria: {e}")
 
-    from repository.memory_repository import db_instance, user_db_instance
+    from src.repository.memory_repository import db_instance, user_db_instance
     return db_instance, user_db_instance
 
 _item_repo, _user_repo = _get_repos()

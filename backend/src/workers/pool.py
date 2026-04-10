@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from workers.queue import job_queue
+from src.workers.queue import job_queue
 
 logger = logging.getLogger("worker_pool")
 

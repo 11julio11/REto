@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import Login from './components/Login'
+import Login from './pages/Login'
 import ItemsList from './components/ItemsList'
 import { ToastProvider, useToast } from './context/ToastContext'
-import { setGlobalErrorHandler } from './services/api'
+import { setGlobalErrorHandler } from './api/api'
 import './App.css'
 
 // Componente interior que conecta el interceptor con el context de Toasts

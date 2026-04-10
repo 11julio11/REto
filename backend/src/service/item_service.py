@@ -2,8 +2,8 @@ import uuid
 from datetime import datetime, timezone
 from typing import List
 
-from domain.interfaces import ItemRepository
-from domain.schemas import ItemCreate, ItemResponse
+from src.domain.interfaces import ItemRepository
+from src.domain.schemas import ItemCreate, ItemResponse
 
 class ItemServiceError(Exception):
     """Excepción base para lógica de negocio de items."""

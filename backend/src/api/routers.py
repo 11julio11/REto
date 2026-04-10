@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from typing import List
 
-from domain.schemas import ItemCreate, ItemResponse
-from service.item_service import ItemService, ItemNotFoundError
-from api.dependencies import get_item_service, get_current_user
-from workers.queue import enqueue_job
+from src.domain.schemas import ItemCreate, ItemResponse
+from src.service.item_service import ItemService, ItemNotFoundError
+from src.api.dependencies import get_item_service, get_current_user
+from src.workers.queue import enqueue_job
 
 router = APIRouter(prefix="/items", tags=["items"])
 

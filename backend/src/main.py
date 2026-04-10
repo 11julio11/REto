@@ -2,15 +2,16 @@
 API principal del Reto T-Shaped Engineer.
 
 Día 14: App Fullstack — Auth real + Migraciones de DB funcionando.
+(Reorganizado en carpeta src)
 """
 
 from contextlib import asynccontextmanager
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routers import router as items_router
-from api.auth_router import router as auth_router
-from workers.pool import WorkerPool
+from src.api.routers import router as items_router
+from src.api.auth_router import router as auth_router
+from src.workers.pool import WorkerPool
 import logging
 
 # Configurar logs básicos para ver el WorkerPool
@@ -35,7 +36,7 @@ async def lifespan(app: FastAPI):
     # 3. Apagar trabajadores y cerrar conexiones DB
     await pool.stop()
     try:
-        from db.connection import close_pool
+        from src.db.connection import close_pool
         close_pool()
     except Exception:
         pass
@@ -72,7 +73,8 @@ def health_check():
         "status": "healthy",
         "service": "reto-api",
         "version": "2.0.0",
-        "arch": "clean-architecture"
+        "arch": "clean-architecture",
+        "location": "src/main.py"
     }
 
 
@@ -82,4 +84,5 @@ def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    # Actualizado para correr el módulo src.main si se invoca con PYTHONPATH
+    uvicorn.run("src.main:app", host="0.0.0.0", port=8000, reload=True)
