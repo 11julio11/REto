@@ -12,10 +12,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.routers import router as items_router
 from src.api.auth_router import router as auth_router
 from src.workers.pool import WorkerPool
-import logging
+from src.config.observability import setup_logging, setup_metrics, TracingMiddleware
 
-# Configurar logs básicos para ver el WorkerPool
-logging.basicConfig(level=logging.INFO)
+# 1. Configurar logs estructurados (JSON) ANTES de cualquier otra cosa
+setup_logging()
 logger = logging.getLogger(__name__)
 
 pool = WorkerPool(num_workers=3)
@@ -52,7 +52,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — permite que el frontend de Vite (puerto 5173) acceda al API
+# Middlewares (El orden importa: Tracing -> CORS)
+app.add_middleware(TracingMiddleware)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
@@ -60,6 +62,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 2. Configurar Métricas (expone /metrics)
+setup_metrics(app)
 
 # Incluir Rutas
 app.include_router(auth_router)
