@@ -33,3 +33,6 @@ psycopg[binary]>=3.1.0
 # Observabilidad (Día 17)
 python-json-logger>=2.0.7
 prometheus-fastapi-instrumentator>=7.0.0
+
+# Caché (Día 18)
+redis>=5.0.0

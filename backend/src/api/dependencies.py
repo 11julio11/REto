@@ -20,12 +20,21 @@ def _get_repos():
         try:
             from src.repository.postgres_item_repository import PostgresItemRepository
             from src.repository.postgres_user_repository import PostgresUserRepository
-            return PostgresItemRepository(), PostgresUserRepository()
+            from src.repository.cached_item_repository import CachedItemRepository
+            
+            base_item_repo = PostgresItemRepository()
+            user_repo = PostgresUserRepository()
+            
+            # Envolvemos el repositorio de items en la capa de caché
+            item_repo = CachedItemRepository(base_item_repo)
+            
+            return item_repo, user_repo
         except Exception as e:
             logger.warning(f"PostgreSQL no disponible, usando memoria: {e}")
 
     from src.repository.memory_repository import db_instance, user_db_instance
     return db_instance, user_db_instance
+
 
 _item_repo, _user_repo = _get_repos()
 

@@ -10,6 +10,8 @@ API containerizada con CI/CD profesional. Checkpoint del Día 7.
 | DB | PostgreSQL 14 (Docker) |
 | Container | Docker multi-stage (Alpine) |
 | Orquestación | Docker Compose + Secrets |
+| Caché | Redis (Día 18) |
+| Observabilidad | JSON Logs + Prometheus (Día 17) |
 | CI/CD | GitHub Actions (Lint → Test → Build) |
 | Testing | pytest (12 tests unitarios) |
 
@@ -85,11 +87,21 @@ reto/
 
 ## Documentación de aprendizaje
 
-- [Día 1: Cloud & IaC](docs/dia1-cloud-iac.md)
-- [Día 2: Docker Avanzado](docs/dia2-docker-avanzado.md)
-- [Día 3: Secret Management](docs/dia3-secret-management.md)
-- [Día 4: CI/CD Testing](docs/dia4-cicd-testing.md)
-- [Día 5: K8s & Networking](docs/dia5-k8s-networking.md)
-- [Día 6: Second Brain](docs/dia6-second-brain.md)
-- [Día 7: Checkpoint](docs/dia7-checkpoint.md)
-- [Día 8: Clean Architecture & DI](docs/dia8-clean-architecture.md)
+- [Día 1: Cloud & IaC](docs/01-cloud-iac.md)
+- [Día 2: Docker Avanzado](docs/02-docker-avanzado.md)
+- [Día 3: Secret Management](docs/03-secret-management.md)
+- [Día 4: CI/CD Testing](docs/04-cicd-testing.md)
+- [Día 5: K8s & Networking](docs/05-k8s-networking.md)
+- [Día 6: Second Brain](docs/06-second-brain.md)
+- [Día 7: Checkpoint](docs/07-checkpoint.md)
+- [Día 8: Clean Architecture & DI](docs/08-clean-architecture.md)
+- [Día 9: Worker Pools](docs/09-worker-pools.md)
+- [Día 10: Seguridad](docs/10-seguridad.md)
+- [Día 11: Migraciones](docs/11-migraciones.md)
+- [Día 12: TanStack Query](docs/12-tanstack-query.md)
+- [Día 13: Error Handling](docs/13-error-handling.md)
+- [Día 14: Fullstack Integración](docs/14-fullstack-integracion.md)
+- [Día 15: Deploy Pipeline](docs/15-deploy.md)
+- [Día 16: DB Performance & Indexes](docs/16-db-indexes.md)
+- [Día 17: Observabilidad](docs/17-observabilidad.md)
+- [Día 18: Redis Cache](docs/18-redis-cache.md)
