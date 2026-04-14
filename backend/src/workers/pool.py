@@ -17,8 +17,9 @@ async def worker(worker_id: int):
             
             logger.info(f"Worker {worker_id} procesando: {job['type']}")
             
-            # Simulamos un procesamiento de tarea pesada de IA o envío de Correo (Demora de 1 seg)
-            await asyncio.sleep(1)
+            # Simulamos un procesamiento de tarea pesada (Demora de 5 seg para test de shutdown)
+            await asyncio.sleep(5)
+
             
             logger.info(f"Worker {worker_id} completó exitosamente la tarea de la data: {job['payload']}")
             
@@ -47,12 +48,23 @@ class WorkerPool:
 
     async def stop(self):
         """Lógica de apagado elegante. Espera a que terminen o cancela."""
-        logger.info("Solicitando shutdown del Worker Pool...")
+        logger.info("Iniciando apagado elegante del Worker Pool...")
         
-        # Opcional: Podrías esperar a que vacíen la cola `await job_queue.join()`
+        # 1. Esperamos a que la cola se vacíe (timeout de 30s)
+        try:
+            pending_tasks = job_queue.qsize()
+            if pending_tasks > 0:
+                logger.info(f"Detectadas {pending_tasks} tareas pendientes. Esperando procesamiento...")
+                # job_queue.join() espera a que todas las tareas tengan su correspondiente task_done()
+                await asyncio.wait_for(job_queue.join(), timeout=30.0)
+                logger.info("Todas las tareas pendientes han sido procesadas.")
+        except asyncio.TimeoutError:
+            logger.warning("Timeout de 30s agotado. Forzando apagado de workers (algunas tareas podrían perderse).")
         
+        # 2. Cancelamos los workers (que ahora estarán bloqueados en job_queue.get())
         for w in self.workers:
-            w.cancel() # Enviamos la CancelledError
+            w.cancel()
         
         await asyncio.gather(*self.workers, return_exceptions=True)
-        logger.info("WorkerPool apagado gloriosamente.")
+        logger.info("WorkerPool apagado exitosamente.")
+

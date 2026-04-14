@@ -49,5 +49,6 @@ def setup_logging():
 
 def setup_metrics(app: FastAPI):
     """Inicializa Prometheus Instrumentator para exponer métricas en /metrics."""
-    Instrumentator().instrument(app).reveal_metrics(app)
+    Instrumentator().instrument(app).expose(app)
+
 

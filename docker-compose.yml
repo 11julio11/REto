@@ -16,10 +16,13 @@ services:
   app:
     build: ./backend
     # Retiramos el puerto 8000 de exposición pública porque Nginx (web) hará el proxy inverso internamente
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
+ 
     environment:
       - DATABASE_URL=postgresql://myuser:superseguro123@db:5432/mydb
+      - REDIS_HOST=redis
+
     depends_on:
       db:
         condition: service_healthy

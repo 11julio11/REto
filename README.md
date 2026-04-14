@@ -105,3 +105,5 @@ reto/
 - [Día 16: DB Performance & Indexes](docs/16-db-indexes.md)
 - [Día 17: Observabilidad](docs/17-observabilidad.md)
 - [Día 18: Redis Cache](docs/18-redis-cache.md)
+- [Día 19: Graceful Shutdown](docs/19-graceful-shutdown.md)
+

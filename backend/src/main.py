@@ -7,6 +7,7 @@ Día 14: App Fullstack — Auth real + Migraciones de DB funcionando.
 
 from contextlib import asynccontextmanager
 import os
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.routers import router as items_router
@@ -22,7 +23,8 @@ pool = WorkerPool(num_workers=3)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 1. Ejecutar migraciones de DB si PostgreSQL está disponible
+    """Orquestación del ciclo de vida de la aplicación."""
+    # --- FASE DE ARRANQUE ---
     if os.environ.get("DATABASE_URL"):
         try:
             from scripts.migrate import run_migrations
@@ -30,16 +32,33 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.warning(f"Migraciones no pudieron correr: {e}")
 
-    # 2. Arrancar los trabajadores
     await pool.start()
+    
     yield
-    # 3. Apagar trabajadores y cerrar conexiones DB
+    
+    # --- FASE DE APAGADO (Graceful Shutdown) ---
+    logger.info("Recibida señal de apagado. Iniciando Graceful Shutdown...")
+    
+    # 1. Detener procesamiento de trabajadores (esperar a que terminen tareas pendientes)
     await pool.stop()
+    
+    # 2. Cerrar conexiones a bases de datos y caché
     try:
         from src.db.connection import close_pool
+        from src.config.redis import redis_client
+        
+        logger.info("Cerrando pool de conexiones PostgreSQL...")
         close_pool()
-    except Exception:
-        pass
+        
+        if redis_client.client:
+            logger.info("Cerrando conexiones Redis...")
+            redis_client.client.close()
+            
+    except Exception as e:
+        logger.error(f"Error durante el cierre de conexiones: {e}")
+
+    logger.info("Apagado finalizado con éxito. ¡Adiós!")
+
 
 # ──────────────────────────────────────────────
 # App FastAPI
