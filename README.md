@@ -106,4 +106,8 @@ reto/
 - [Día 17: Observabilidad](docs/17-observabilidad.md)
 - [Día 18: Redis Cache](docs/18-redis-cache.md)
 - [Día 19: Graceful Shutdown](docs/19-graceful-shutdown.md)
-
+- [Día 20: Optimización de Costos](docs/20-optimizacion-costos.md)
+- [Día 21: Checkpoint & Deploy](docs/21-checkpoint-deploy.md)
+- [Día 22: Modelos de Negocio SaaS](docs/22-modelos-de-negocio.md)
+- [Día 23: MVP & RICE](docs/23-mvp-rice.md)
+- [Día 24: Métricas de Producto](docs/24-metricas-producto.md)

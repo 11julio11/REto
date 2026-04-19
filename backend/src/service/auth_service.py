@@ -26,6 +26,15 @@ class AuthService:
         }
         self.repo.save(user_id, user_data)
         
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info("New user successfully registered", extra={
+            "metric_type": "product_event",
+            "event_name": "USER_SIGNED_UP",
+            "user_id": user_id,
+            "username": user_create.username
+        })
+        
         return {"id": user_id, "username": user_create.username}
 
     def authenticate_user(self, username: str, password: str) -> Optional[dict]:
