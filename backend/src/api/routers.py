@@ -1,16 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from typing import List
 
-from src.domain.schemas import ItemCreate, ItemResponse
+from src.domain.schemas import SubscriptionCreate, SubscriptionResponse
 from src.service.item_service import ItemService, ItemNotFoundError
 from src.api.dependencies import get_item_service, get_current_user
 from src.workers.queue import enqueue_job
 
-router = APIRouter(prefix="/items", tags=["items"])
+router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
 
 
-@router.get("", response_model=List[ItemResponse])
-def list_items(
+@router.get("", response_model=List[SubscriptionResponse])
+def list_subscriptions(
     service: ItemService = Depends(get_item_service),
     current_user: dict = Depends(get_current_user)
 ):
@@ -18,17 +18,17 @@ def list_items(
     return service.list_items()
 
 
-@router.post("", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
-def create_item(
-    item: ItemCreate,
+@router.post("", response_model=SubscriptionResponse, status_code=status.HTTP_201_CREATED)
+def create_subscription(
+    subscription: SubscriptionCreate,
     service: ItemService = Depends(get_item_service),
     current_user: dict = Depends(get_current_user)
 ):
-    return service.create_item(item)
+    return service.create_item(subscription)
 
 
-@router.get("/{item_id}", response_model=ItemResponse)
-def get_item(
+@router.get("/{item_id}", response_model=SubscriptionResponse)
+def get_subscription(
     item_id: str,
     service: ItemService = Depends(get_item_service),
     current_user: dict = Depends(get_current_user)

@@ -85,18 +85,18 @@ export const registerUser = async ({ username, password }) => {
   return data
 }
 
-export const fetchItems = async () => {
-  const { data } = await apiClient.get('/items')
+export const fetchSubscriptions = async () => {
+  const { data } = await apiClient.get('/subscriptions')
   return data
 }
 
-export const createItem = async (item) => {
-  const { data } = await apiClient.post('/items', item)
+export const createSubscription = async (subscription) => {
+  const { data } = await apiClient.post('/subscriptions', subscription)
   return data
 }
 
-export const deleteItem = async (itemId) => {
-  await apiClient.delete(`/items/${itemId}`)
+export const deleteSubscription = async (subscriptionId) => {
+  await apiClient.delete(`/subscriptions/${subscriptionId}`)
 }
 
 export default apiClient

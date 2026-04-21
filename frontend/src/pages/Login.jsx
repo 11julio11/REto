@@ -15,8 +15,10 @@ export default function Login({ onLogin }) {
     try {
       if (mode === 'register') {
         await registerUser({ username, password })
-        setMode('login')
-        setError('✅ Registrado correctamente. Ahora inicia sesión.')
+        // Auto-login logic
+        const tokens = await loginUser({ username, password })
+        localStorage.setItem('access_token', tokens.access_token)
+        onLogin()
       } else {
         const tokens = await loginUser({ username, password })
         localStorage.setItem('access_token', tokens.access_token)
@@ -33,7 +35,7 @@ export default function Login({ onLogin }) {
     <div className="auth-card">
       <div className="auth-logo">⚡</div>
       <h1>{mode === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}</h1>
-      <p className="auth-subtitle">Reto T-Shaped Engineer — Día 12</p>
+      <p className="auth-subtitle">Reto T-Shaped Engineer — Día 25</p>
 
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="field">

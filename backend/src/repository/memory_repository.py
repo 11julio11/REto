@@ -1,31 +1,29 @@
 from typing import List, Optional
 from src.domain.interfaces import ItemRepository, UserRepository
-from src.domain.schemas import ItemResponse
+from src.domain.schemas import SubscriptionResponse
 
 
 class MemoryItemRepository(ItemRepository):
     """
     Implementación en memoria de la interfaz ItemRepository.
-    En la Semana 2, crearemos un PostgresItemRepository(ItemRepository)
-    y lo inyectaremos en lugar de este, sin cambiar nada en el servicio!
     """
 
     def __init__(self):
         # Base de datos en memoria local a esta instancia
         self._db: dict[str, dict] = {}
 
-    def get_all(self) -> List[ItemResponse]:
-        return [ItemResponse(**item) for item in self._db.values()]
+    def get_all(self) -> List[SubscriptionResponse]:
+        return [SubscriptionResponse(**item) for item in self._db.values()]
 
-    def get_by_id(self, item_id: str) -> Optional[ItemResponse]:
+    def get_by_id(self, item_id: str) -> Optional[SubscriptionResponse]:
         item_data = self._db.get(item_id)
         if item_data:
-            return ItemResponse(**item_data)
+            return SubscriptionResponse(**item_data)
         return None
 
-    def save(self, item_id: str, item_data: dict) -> ItemResponse:
+    def save(self, item_id: str, item_data: dict) -> SubscriptionResponse:
         self._db[item_id] = item_data
-        return ItemResponse(**item_data)
+        return SubscriptionResponse(**item_data)
 
     def delete(self, item_id: str) -> bool:
         if item_id in self._db:

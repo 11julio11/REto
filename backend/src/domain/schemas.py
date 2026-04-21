@@ -2,19 +2,23 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-class ItemCreate(BaseModel):
-    """Schema para crear un item."""
+class SubscriptionCreate(BaseModel):
+    """Schema para crear una suscripción."""
     name: str
     description: Optional[str] = None
-    price: float
+    cost: float
+    billing_cycle: str  # monthly, yearly
+    next_payment: str   # ISO format date
 
 
-class ItemResponse(BaseModel):
-    """Schema de respuesta de un item."""
+class SubscriptionResponse(BaseModel):
+    """Schema de respuesta de una suscripción."""
     id: str
     name: str
     description: Optional[str] = None
-    price: float
+    cost: float
+    billing_cycle: str
+    next_payment: str
     created_at: str
 
 class UserCreate(BaseModel):

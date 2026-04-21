@@ -34,7 +34,7 @@ function AppInner() {
       <header className="app-header">
         <div className="header-brand">
           <span className="logo">⚡</span>
-          <span>Reto T-Shaped <em>Day 13</em></span>
+          <span>Reto T-Shaped <em>Día 25</em></span>
         </div>
         {isLoggedIn && (
           <button className="btn-logout" onClick={handleLogout}>

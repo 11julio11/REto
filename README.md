@@ -1,113 +1,53 @@
-# 🚀 Reto API — T-Shaped Engineer Challenge
+# ⚡ REto: Subscription Manager (Día 30)
 
-API containerizada con CI/CD profesional. Checkpoint del Día 7.
+¡Bienvenido al resultado final del **Reto T-Shaped Engineer**! Este proyecto ha evolucionado de una simple lista de items a un **Gestor de Suscripciones** profesional, optimizado para el usuario y con una infraestructura robusta.
 
-## Stack
+## 🚀 Características Finales
 
-| Capa | Tecnología |
-|------|-----------|
-| API | Python 3.11 + FastAPI |
-| DB | PostgreSQL 14 (Docker) |
-| Container | Docker multi-stage (Alpine) |
-| Orquestación | Docker Compose + Secrets |
-| Caché | Redis (Día 18) |
-| Observabilidad | JSON Logs + Prometheus (Día 17) |
-| CI/CD | GitHub Actions (Lint → Test → Build) |
-| Testing | pytest (12 tests unitarios) |
+-   **UX Senior (Día 25)**: Flujo de registro con **Auto-Login** inmediato. Menos clics para el usuario.
+-   **Diseño Premium**: Interfaz moderna con temática **Indigo/Slate**, sombras suaves y responsive design.
+-   **Dashboard de Métricas (Día 27)**: Cálculo automático de gasto mensual estimado y control de suscripciones activas.
+-   **IA Copilot Avanzado (Día 26)**: Cobertura de tests del 70% enfocada en casos de borde (edge cases) y seguridad.
+-   **Arquitectura Limpia (Clean Architecture)**: Separación clara entre Dominio, Servicios y Repositorios.
 
-## Quick Start
+## 🏗️ Arquitectura Técnica
 
-### Requisitos
-- Docker y Docker Compose instalados
-- Python 3.11 (para desarrollo local)
+El sistema utiliza un enfoque de **Capas** para permitir la escalabilidad y el intercambio de componentes (ej: cambiar la base de datos en memoria por PostgreSQL sin tocar la lógica de negocio).
 
-### Correr con Docker Compose
-```bash
-# Levantar API + PostgreSQL
-docker-compose up --build
+```mermaid
+graph TD
+    subgraph Frontend (React + Vite)
+        UI[Componentes UI] --> TanStack[TanStack Query]
+        TanStack --> Axios[Axios API Client]
+    end
 
-# La API estará en http://localhost:8000
-# Documentación Swagger en http://localhost:8000/docs
+    subgraph Backend (FastAPI)
+        Axios --> Router[API Routers]
+        Router --> Service[Subscription Service]
+        Service --> Domain[Domain Schemas]
+        Service --> Repository[Repository Interface]
+        Repository --> MemoryDB[(Memory DB / Postgres)]
+    end
+
+    subgraph Infrastructura
+        Service --> Redis[(Redis Cache)]
+        Service --> Workers[Background Workers]
+    end
 ```
 
-### Desarrollo local
-```bash
-# Crear entorno virtual
-python -m venv .venv
-source .venv/bin/activate  # Linux/Mac
-# .venv\Scripts\activate   # Windows
+## 🛠️ Decisiones Técnicas Clave
 
-# Instalar dependencias
-pip install -r requirements.txt
+1.  **FastAPI + Pydantic**: Para una validación de datos ultrarrápida y documentación automática (Swagger).
+2.  **TanStack Query**: Manejo de estado asíncrono y caché en el frontend para una experiencia fluida.
+3.  **Inyección de Dependencias**: Facilita el testing y desacopla la infraestructura del negocio.
+4.  **Repositorio Cacheado**: Implementación de un patrón *Decorator* sobre el repositorio para integrar Redis de forma transparente.
 
-# Correr la API
-python main.py
+## 🧪 Pruebas y Robustez
 
-# Correr tests
-pytest tests/ -v
-```
+Se ha implementado una estrategia de testing que cubre:
+-   Autenticación (Login, Registro, Refresh).
+-   Casos de borde en CRUD de suscripciones (IDs inválidos, campos faltantes).
+-   Seguridad de rutas protegidas.
 
-## Endpoints
-
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| `GET` | `/` | Health check |
-| `GET` | `/items` | Listar todos los items |
-| `POST` | `/items` | Crear un item |
-| `GET` | `/items/{id}` | Obtener un item |
-| `DELETE` | `/items/{id}` | Eliminar un item |
-
-### Ejemplo: Crear un item
-```bash
-curl -X POST http://localhost:8000/items \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Laptop", "description": "MacBook Pro", "price": 2499.99}'
-```
-
-## Pipeline CI/CD
-
-```
-Push/PR a main → Lint (flake8) → Tests (pytest) → Build (Docker)
-```
-
-Si cualquier paso falla, los siguientes NO se ejecutan.
-
-## Estructura del proyecto
-
-```
-reto/
-├── .github/workflows/ci.yml    ← Pipeline CI/CD
-├── docs/                        ← Notas de aprendizaje (Second Brain)
-├── tests/test_main.py           ← Tests unitarios
-├── main.py                      ← API FastAPI
-├── dockerfile                   ← Multi-stage build
-├── docker-compose.yml           ← App + PostgreSQL
-└── requirements.txt             ← Dependencias
-```
-
-## Documentación de aprendizaje
-
-- [Día 1: Cloud & IaC](docs/01-cloud-iac.md)
-- [Día 2: Docker Avanzado](docs/02-docker-avanzado.md)
-- [Día 3: Secret Management](docs/03-secret-management.md)
-- [Día 4: CI/CD Testing](docs/04-cicd-testing.md)
-- [Día 5: K8s & Networking](docs/05-k8s-networking.md)
-- [Día 6: Second Brain](docs/06-second-brain.md)
-- [Día 7: Checkpoint](docs/07-checkpoint.md)
-- [Día 8: Clean Architecture & DI](docs/08-clean-architecture.md)
-- [Día 9: Worker Pools](docs/09-worker-pools.md)
-- [Día 10: Seguridad](docs/10-seguridad.md)
-- [Día 11: Migraciones](docs/11-migraciones.md)
-- [Día 12: TanStack Query](docs/12-tanstack-query.md)
-- [Día 13: Error Handling](docs/13-error-handling.md)
-- [Día 14: Fullstack Integración](docs/14-fullstack-integracion.md)
-- [Día 15: Deploy Pipeline](docs/15-deploy.md)
-- [Día 16: DB Performance & Indexes](docs/16-db-indexes.md)
-- [Día 17: Observabilidad](docs/17-observabilidad.md)
-- [Día 18: Redis Cache](docs/18-redis-cache.md)
-- [Día 19: Graceful Shutdown](docs/19-graceful-shutdown.md)
-- [Día 20: Optimización de Costos](docs/20-optimizacion-costos.md)
-- [Día 21: Checkpoint & Deploy](docs/21-checkpoint-deploy.md)
-- [Día 22: Modelos de Negocio SaaS](docs/22-modelos-de-negocio.md)
-- [Día 23: MVP & RICE](docs/23-mvp-rice.md)
-- [Día 24: Métricas de Producto](docs/24-metricas-producto.md)
+---
+*Este proyecto es el cierre del reto de 30 días para forjar un perfil T-Shaped Engineer.*
